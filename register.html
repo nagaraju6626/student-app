@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <div class="container">
+        <h1>Student Registration Form</h1>
+        <form id="registrationForm" method="POST" action="/api/students" class="form-group">
+            <!-- Combined Fields Section -->
+            <div class="form-section">
+                <div class="form-row">
+                    <label for="name">Name: <span class="required">*</span></label>
+                    <input type="text" id="name" name="name" class="required-field" data-field-type="text" placeholder="Enter full name">
+                    <span class="error-message" id="name-error"></span>
+                </div>
+
+                <div class="form-row">
+                    <label for="roll_number">Roll Number: <span class="required">*</span></label>
+                    <input type="text" id="roll_number" name="roll_number" class="required-field" data-field-type="text" placeholder="Enter roll number">
+                    <span class="error-message" id="roll_number-error"></span>
+                </div>
+
+                <div class="form-row">
+                    <label for="father_name">Father's Name: <span class="required">*</span></label>
+                    <input type="text" id="father_name" name="father_name" class="required-field" data-field-type="text" placeholder="Enter father's full name">
+                    <span class="error-message" id="father_name-error"></span>
+                </div>
+
+                <div class="form-row">
+                    <label for="address">Address: <span class="required">*</span></label>
+                    <textarea id="address" name="address" class="required-field" data-field-type="text" placeholder="Enter complete address"></textarea>
+                    <span class="error-message" id="address-error"></span>
+                </div>
+
+                <div class="form-row">
+                    <label for="age">Age: <span class="required">*</span></label>
+                    <input type="number" id="age" name="age" class="required-field" data-field-type="number" min="1" max="100" placeholder="Enter age">
+                    <span class="error-message" id="age-error"></span>
+                </div>
+
+                <div class="form-row">
+                    <label for="phone">Phone Number: <span class="required">*</span></label>
+                    <input type="text" id="phone" name="phone" class="required-field" data-field-type="phone" placeholder="10-digit phone number (6-9)">
+                    <span class="error-message" id="phone-error"></span>
+                </div>
+
+                <div class="form-row">
+                    <label for="email">Email: <span class="required">*</span></label>
+                    <input type="email" id="email" name="email" class="required-field" data-field-type="gmail" placeholder="name@gmail.com">
+                    <span class="error-message" id="email-error"></span>
+                    <small>Must be a valid Gmail address (ending with @gmail.com)</small>
+                </div>
+            <!-- Optional fields continue in the same section -->
+                <div class="form-row">
+                    <label for="father_phone">Father's Phone:</label>
+                    <input type="text" id="father_phone" name="father_phone" data-field-type="phone-optional" placeholder="10-digit phone number (optional)">
+                    <span class="error-message" id="father_phone-error"></span>
+                </div>
+
+                <div class="form-row">
+                    <label for="father_email">Father's Email:</label>
+                    <input type="email" id="father_email" name="father_email" data-field-type="gmail-optional" placeholder="name@gmail.com (optional)">
+                    <span class="error-message" id="father_email-error"></span>
+                </div>
+
+                <div class="form-row">
+                    <label for="eamcet_rank">EAMCET Rank:</label>
+                    <input type="number" id="eamcet_rank" name="eamcet_rank" placeholder="Enter rank (optional)">
+                </div>
+
+                <div class="form-row">
+                    <label for="ssc_marks">SSC Marks:</label>
+                    <input type="number" id="ssc_marks" name="ssc_marks" min="0" max="600" step="1" placeholder="Enter marks (0 to 600, optional)" data-field-type="ssc-marks">
+                    <span class="error-message" id="ssc_marks-error"></span>
+                    <small>Enter SSC marks out of 600 (e.g., 480)</small>
+                </div>
+
+                <div class="form-row">
+                    <label for="inter_marks">Inter Marks:</label>
+                    <input type="number" id="inter_marks" name="inter_marks" min="0" max="1000" placeholder="Enter marks (max 1000, optional)" data-field-type="marks">
+                    <span class="error-message" id="inter_marks-error"></span>
+                </div>
+
+                <div class="form-row">
+                    <label for="achievements">Achievements:</label>
+                    <textarea id="achievements" name="achievements" placeholder="Enter achievements (optional)"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <label for="remarks">Remarks:</label>
+                    <textarea id="remarks" name="remarks" placeholder="Enter remarks (optional)"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <label for="identification_mark">Identification Mark:</label>
+                    <input type="text" id="identification_mark" name="identification_mark" placeholder="e.g., mole, scar (optional)">
+                </div>
+
+                <div class="form-row">
+                    <label for="blood_group">Blood Group:</label>
+                    <input type="text" id="blood_group" name="blood_group" placeholder="e.g., O+, A-, B+ (optional)">
+                </div>
+            </div>
+
+            <div class="form-row button-row">
+                <button type="submit" id="submitBtn" class="btn">Register</button>
+                <a href="search.html" class="btn btn-secondary">Search Student</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Form fields order for Enter key navigation
+        const fieldOrder = [
+            'name', 'roll_number', 'father_name', 'address', 'age', 'phone', 'email',
+            'father_phone', 'father_email', 'eamcet_rank', 'ssc_marks',
+            'inter_marks', 'achievements', 'remarks', 'identification_mark', 'blood_group'
+        ];
+
+        // Validation rules
+        const validationRules = {
+            roll_number: {
+                required: true,
+                validate: (value) => value.trim().length > 0,
+                errorMsg: 'Please enter a roll number.'
+            },
+            name: {
+                required: true,
+                validate: (value) => value.trim().length > 0,
+                errorMsg: 'Please fill this field.'
+            },
+            father_name: {
+                required: true,
+                validate: (value) => value.trim().length > 0,
+                errorMsg: 'Please fill this field.'
+            },
+            address: {
+                required: true,
+                validate: (value) => value.trim().length > 0,
+                errorMsg: 'Please fill this field.'
+            },
+            age: {
+                required: true,
+                validate: (value) => !isNaN(value) && value > 0 && value < 100,
+                errorMsg: 'Please enter a valid age.'
+            },
+            phone: {
+                required: true,
+                validate: (value) => /^[6-9]\d{9}$/.test(value.trim()),
+                errorMsg: 'Please enter a valid phone number (10 digits starting with 6, 7, 8, or 9)'
+            },
+            email: {
+                required: true,
+                validate: (value) => /^[^\s@]+@gmail\.com$/.test(value.trim()),
+                errorMsg: 'Please enter a valid Gmail address'
+            },
+            father_phone: {
+                required: false,
+                validate: (value) => value.trim() === '' || /^[6-9]\d{9}$/.test(value.trim()),
+                errorMsg: 'Please enter a valid phone number. (10 digits starting with 6, 7, 8, or 9)'
+            },
+            father_email: {
+                required: false,
+                validate: (value) => value.trim() === '' || /^[^\s@]+@gmail\.com$/.test(value.trim()),
+                errorMsg: 'Please enter a valid Gmail address.'
+            },
+            ssc_marks: {
+                required: false,
+                validate: (value) => value.trim() === '' || (!isNaN(value) && value >= 0 && value <= 600),
+                errorMsg: 'Please enter SSC marks between 0 and 600.'
+            },
+            inter_marks: {
+                required: false,
+                validate: (value) => value.trim() === '' || (!isNaN(value) && value >= 0 && value <= 1000),
+                errorMsg: 'Please enter marks between 0 and 1000.'
+            }
+        };
+
+        // Track whether a field has been interacted with (so errors are hidden on initial load)
+        const touched = {};
+
+        // Initialize touched state and hide all error message elements on load
+        Object.keys(validationRules).forEach(fieldId => {
+            touched[fieldId] = false;
+            const errEl = document.getElementById(fieldId + '-error');
+            if (errEl) {
+                errEl.textContent = '';
+                errEl.style.display = 'none';
+            }
+        });
+
+        // Get form elements
+        const form = document.getElementById('registrationForm');
+        const submitBtn = document.getElementById('submitBtn');
+
+        // Add Enter key navigation
+        fieldOrder.forEach((fieldId, index) => {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                field.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        // If there's a next field, focus on it
+                        if (index < fieldOrder.length - 1) {
+                            const nextFieldId = fieldOrder[index + 1];
+                            document.getElementById(nextFieldId).focus();
+                        } else {
+                            // Last field - trigger form submission in a way
+                            // that fires the submit event (avoids bypassing handlers)
+                            if (typeof form.requestSubmit === 'function') {
+                                form.requestSubmit();
+                            } else {
+                                submitBtn.click();
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+        // Validate individual field
+        function validateField(fieldId) {
+            const field = document.getElementById(fieldId);
+            const errorElement = document.getElementById(fieldId + '-error');
+
+            if (!validationRules[fieldId]) {
+                return true; // No validation rule, field is valid
+            }
+
+            const rule = validationRules[fieldId];
+            const isValid = rule.validate(field.value);
+
+            if (!isValid) {
+                if (touched[fieldId]) {
+                    errorElement.textContent = rule.errorMsg;
+                    errorElement.style.display = 'block';
+                    field.classList.add('invalid');
+                    field.classList.remove('valid');
+                } else {
+                    // Don't show error messages for untouched fields
+                    errorElement.textContent = '';
+                    errorElement.style.display = 'none';
+                    field.classList.remove('invalid');
+                    field.classList.remove('valid');
+                }
+                return false;
+            } else {
+                // Valid input: hide any error message
+                errorElement.textContent = '';
+                errorElement.style.display = 'none';
+                field.classList.add('valid');
+                field.classList.remove('invalid');
+                return true;
+            }
+        }
+
+        // Validate entire form
+        function validateForm() {
+            let isValid = true;
+            Object.keys(validationRules).forEach(fieldId => {
+                if (!validateField(fieldId)) {
+                    isValid = false;
+                }
+            });
+            return isValid;
+        }
+
+        // Check if form is valid and update submit button
+        function updateSubmitButton() {
+            const isValid = validateForm();
+            submitBtn.disabled = !isValid;
+        }
+
+        // Add real-time validation listeners (validate while typing)
+        Object.keys(validationRules).forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                field.addEventListener('blur', () => {
+                    touched[fieldId] = true;
+                    validateField(fieldId);
+                    updateSubmitButton();
+                });
+
+                field.addEventListener('input', () => {
+                    // Mark field as touched as soon as user starts typing
+                    touched[fieldId] = true;
+                    validateField(fieldId);
+                    updateSubmitButton();
+                });
+            }
+        });
+
+        // Form submission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!validateForm()) {
+                alert('Please fix all validation errors before submitting.');
+                const firstError = document.querySelector('.invalid');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    firstError.focus();
+                }
+                return;
+            }
+
+            // Collect form data
+            const formData = new FormData(form);
+            const jsonData = Object.fromEntries(formData.entries());
+
+            // If page is opened via file://, don't attempt to POST to /api/students
+            if (window.location.protocol === 'file:') {
+                // Save submission locally (localStorage) as fallback
+                try {
+                    const existing = JSON.parse(localStorage.getItem('local_submissions') || '[]');
+                    existing.push({ submittedAt: new Date().toISOString(), data: jsonData });
+                    localStorage.setItem('local_submissions', JSON.stringify(existing));
+                    alert('No server detected. Form data saved locally in your browser.');
+                    form.reset();
+                    updateSubmitButton();
+                } catch (err) {
+                    alert('Could not save locally: ' + err.message);
+                }
+                return;
+            }
+
+            // Otherwise, attempt to POST to the configured action URL
+            try {
+                const resp = await fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(jsonData)
+                });
+
+                if (resp.ok) {
+                    alert('Registered successfully.');
+                    form.reset();
+                    updateSubmitButton();
+                } else {
+                    const text = await resp.text().catch(() => '');
+                    alert('Server error: ' + resp.status + ' ' + resp.statusText + '\n' + text);
+                }
+            } catch (err) {
+                alert('Network error while submitting: ' + err.message);
+            }
+        });
+
+        // Initial button state
+        updateSubmitButton();
+    </script>

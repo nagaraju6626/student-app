@@ -1,0 +1,15 @@
+{
+  "name": "nag-student-app",
+  "version": "1.0.0",
+  "description": "Student registration and search (Node.js + MongoDB)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "express": "^4.18.2",
+    "mongoose": "^8.0.0",
+    "multer": "1.4.4-lts.1"
+  }
+}

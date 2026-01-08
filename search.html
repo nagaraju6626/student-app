@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Student</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Search Student Details</h1>
+        <form id="searchForm" class="search-form">
+            <div class="form-row">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" placeholder="Enter student name">
+            </div>
+
+            <div class="form-row">
+                <label for="roll_number">Roll Number:</label>
+                <input type="text" id="roll_number" name="roll_number" placeholder="Enter roll number">
+            </div>
+
+            <div class="form-row">
+                <label for="father_name">Father's Name:</label>
+                <input type="text" id="father_name" name="father_name" placeholder="Enter father's name">
+            </div>
+
+            <div class="form-row">
+                <button type="submit" class="btn">Search</button>
+                <a href="register.html" class="btn btn-secondary">Back to Registration</a>
+            </div>
+        </form>
+
+        <div id="message"></div>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const messageDiv = document.getElementById('message');
+            const resultsDiv = document.getElementById('results');
+            
+            // Clear previous messages and results
+            messageDiv.innerHTML = '';
+            resultsDiv.innerHTML = '<p>Loading...</p>';
+            
+            // Collect form data
+            const formData = new FormData(document.getElementById('searchForm'));
+            const params = new URLSearchParams();
+            
+            let hasParams = false;
+            for (const [key, value] of formData.entries()) {
+                if (value.trim()) {
+                    params.append(key, value);
+                    hasParams = true;
+                }
+            }
+            
+            const queryString = params.toString();
+            const url = `/api/students${queryString ? '?' + queryString : ''}`;
+            
+            console.log('Fetching from:', url);
+            
+            try {
+                const response = await fetch(url);
+                console.log('Response status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status} ${response.statusText}`);
+                }
+                
+                const html = await response.text();
+                resultsDiv.innerHTML = html;
+            } catch (error) {
+                console.error('Search error:', error);
+                resultsDiv.innerHTML = '';
+                messageDiv.innerHTML = `<div class="error-msg">Error occurred while fetching student details. Please try again later.<br><small>Error: ${error.message}</small></div>`;
+            }
+        });
+    </script>
+</body>
+</html>
